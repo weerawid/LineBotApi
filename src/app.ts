@@ -1,9 +1,9 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 
-import lineEvent from './api/routes/line_event.route.ts';
-import { contextMiddleWare } from './core/middleware/middlewareHelper.ts';
-import { initializeContext } from './core/context/app_context.ts';
+import lineEvent from './api/routes/line_event.route';
+import { contextMiddleWare } from './core/middleware/middlewareHelper';
+import { initializeContext } from './core/context/app_context';
 
 
 const app = express();

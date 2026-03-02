@@ -1,5 +1,5 @@
 import express from 'express';
-import * as controler from '../api/controller/line_event.controller.ts'
+import * as controler from '../api/controller/line_event.controller'
 
 const router = express.Router();
 

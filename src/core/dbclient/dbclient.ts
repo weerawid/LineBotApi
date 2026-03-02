@@ -1,6 +1,6 @@
 import { createClient } from "@libsql/client"
 import type { Client } from "@libsql/client"
-import { getContext } from "../context/app_context.ts";
+import { getContext } from "../context/app_context";
 
 let dbClient: Client | null = null;
 
