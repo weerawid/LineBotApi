@@ -26,11 +26,11 @@ export async function initializeContext(): Promise<AppContext> {
 
 export async function updateContext(): Promise<void> {
   if (!context) {
-    throw new Error('AppContext not initialized')
+    initializeContext()
   }
 
   const config = await getConfig()
-  context.config = config
+  context!.config = config
 }
 
 export async function getContext(): Promise<AppContext> {

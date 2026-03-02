@@ -8,8 +8,6 @@ import { initializeContext } from './core/context/app_context';
 
 const app = express();
 
-await initializeContext()
-
 app.use(contextMiddleWare);
 app.use(bodyParser.json());
 
