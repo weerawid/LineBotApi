@@ -1,5 +1,5 @@
 import type { Request, Response } from "express"
-import { getDBClient } from "../core/dbclient/dbclient.ts"
+import { getDBClient } from "../../core/dbclient/dbclient.ts"
 import type { Client } from "@libsql/client"
 
 export async function inquiry(
