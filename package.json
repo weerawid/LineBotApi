@@ -13,17 +13,18 @@
   "license": "ISC",
   "dependencies": {
     "@libsql/client": "^0.17.0",
-    "@types/express": "^5.0.6",
     "body-parser": "^2.2.2",
     "dotenv": "^17.3.1",
+    "express": "^5.2.1",
     "google-auth-library": "^10.5.0",
     "googleapis": "^171.4.0",
-    "nodemon": "^3.1.14",
-    "promise": "^8.3.0",
-    "typescript": "^5.9.3"
+    "promise": "^8.3.0"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "@types/node": "^25.3.3",
-    "ts-node-dev": "^2.0.0"
+    "nodemon": "^3.1.14",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
   }
 }
