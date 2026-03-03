@@ -3,8 +3,6 @@ import bodyParser from 'body-parser';
 
 import lineEvent from './api/routes/line_event.route';
 import { contextMiddleWare } from './core/middleware/middlewareHelper';
-import { initializeContext } from './core/context/app_context';
-
 
 const app = express();
 
