@@ -33,14 +33,15 @@ export async function create(
     const dbclient: Client = await getDBClient()
 
     const { eventValue } = req.body
-    const destination = eventValue.destination
+    const eventData = JSON.parse(eventValue)
+    const destination = eventData.destination
 
-    for (const event of eventValue.events) {
+    for (const event of eventData.events) {
       let eventId = event.webhookEventId
       let groupId = event.source.groupId
       let timestamp = new Date(event.timestamp).toISOString()
       const result = await dbclient.execute({
-        sql: "INSERT INTO line_event(line_event_id, line_event_message, line_group_id, line_event_timestamp, line_event_destination) VALUES (?, ?, ?)",
+        sql: "INSERT INTO line_event(line_event_id, line_event_message, line_group_id, line_event_timestamp, line_event_destination) VALUES (?, ?, ?, ?, ?)",
         args: [eventId, eventValue, groupId, timestamp, destination],
       })
     }
