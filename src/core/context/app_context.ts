@@ -29,8 +29,10 @@ export async function updateContext(): Promise<void> {
     initializeContext()
   }
 
-  const config = await getConfig()
-  context!.config = config
+  if (context) {
+    const config = await getConfig()
+    context.config = config
+  }
 }
 
 export async function getContext(): Promise<AppContext> {
