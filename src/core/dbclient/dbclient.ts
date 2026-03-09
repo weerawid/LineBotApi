@@ -61,7 +61,7 @@ export class DBClientManager {
       this.isConnected = true
       console.log("Database connected successfully")
     } catch (e) {
-      logErrorMessage(ErrorMap.DB_CONNECT_FAILURE_00300)
+      throw new AppError(ErrorKey.DB_CONNECT_FAILURE_00300, `connect: ${e}`);
     }
   }
 
@@ -70,14 +70,14 @@ export class DBClientManager {
    */
   async execute<T = any>(sql: string, params?: any[]): Promise<T> {
     if (!this.client || !this.isConnected) {
-      throw new AppError(ErrorKey.DB_CONNECT_FAILURE_00300, "Database not connected. Call connect() first");
+      throw new AppError(ErrorKey.DB_CONNECT_FAILURE_00300, "execute: Database not connected.");
     }
 
     try {
       const result = await this.client.execute(sql, params);
       return result as T;
     } catch (error) {
-      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `Database execution failed: ${error}`);
+      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `execute: Database execution failed: ${error}`);
     }
   }
 
@@ -86,7 +86,7 @@ export class DBClientManager {
    */
   async executeBatch<T = any>(queries: Array<{ sql: string; params?: any[] }>): Promise<T[]> {
     if (!this.client || !this.isConnected) {
-      throw new AppError(ErrorKey.DB_CONNECT_FAILURE_00300, "Database not connected. Call connect() first");
+      throw new AppError(ErrorKey.DB_CONNECT_FAILURE_00300, "executeBatch: Database not connected.");
     }
 
     try {
@@ -95,7 +95,7 @@ export class DBClientManager {
       );
       return results as T[];
     } catch (error) {
-      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `Batch execution failed: ${error}`);
+      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `executeBatch: Batch execution failed: ${error}`);
     }
   }
 
@@ -114,7 +114,7 @@ export class DBClientManager {
    */
   async insert(table: string, values: Record<string, any>): Promise<any> {
     if (!this.client || !this.isConnected) {
-      throw new AppError(ErrorKey.DB_CONNECT_FAILURE_00300, "Database not connected. Call connect() first");
+      throw new AppError(ErrorKey.DB_CONNECT_FAILURE_00300, "insert: Database not connected. Call connect() first");
     }
 
     try {
@@ -131,7 +131,7 @@ export class DBClientManager {
       const result = await this.client.execute(sql, params);
       return result;
     } catch (error) {
-      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `Insert operation failed: ${error}`);
+      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `insert: Insert operation failed: ${error}`);
     }
   }
 
@@ -146,7 +146,7 @@ export class DBClientManager {
     operation: (client: Client) => Promise<T>
   ): Promise<T> {
     if (!this.client || !this.isConnected) {
-      throw new AppError(ErrorKey.DB_CONNECT_FAILURE_00300, "Database not connected. Call connect() first");
+      throw new AppError(ErrorKey.DB_CONNECT_FAILURE_00300, "custom: Database not connected. Call connect() first");
     }
 
     try {
@@ -154,7 +154,7 @@ export class DBClientManager {
       const result = await operation(this.client);
       return result as T;
     } catch (error) {
-      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `Custom operation '${operationName}' failed: ${error}`);
+      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `custom: Custom operation '${operationName}' failed: ${error}`);
     }
   }
 
@@ -173,7 +173,7 @@ export class DBClientManager {
       this.isConnected = false;
       console.log("Database disconnected");
     } catch (error) {
-      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `Failed to disconnect: ${error}`);
+      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `disconnect: Failed to disconnect: ${error}`);
     }
   }
 
