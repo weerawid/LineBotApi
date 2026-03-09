@@ -8,6 +8,7 @@ import { DBClientManager } from './core/dbclient/dbclient';
 const app = express();
 
 const manager = DBClientManager.getInstance();
+manager.connect();
 
 app.use(contextMiddleWare);
 app.use(bodyParser.json());

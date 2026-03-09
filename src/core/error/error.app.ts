@@ -113,9 +113,9 @@ export function createAppError(message: string | null = null): AppError {
   return new AppError(ErrorKey.UNKNOW_ERROR_00000, message ?? undefined);
 }
 
-export function getErrorMessage(error: unknown): string {
+export function getErrorMessage(error: unknown): any {
   if (error instanceof AppError) {
-    return JSON.stringify(error.toJSON());
+    return error;
   } else if (error instanceof Error) {
     return JSON.stringify({
       name: error.name,
