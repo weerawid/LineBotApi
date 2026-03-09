@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 import lineEvent from './api/routes/line_event.route';
+import lineUser from './api/routes/line_user.route';
 import { contextMiddleWare } from './core/middleware/middlewareHelper';
 import { DBClientManager } from './core/dbclient/dbclient';
 
@@ -14,7 +15,7 @@ app.use(contextMiddleWare);
 app.use(bodyParser.json());
 
 app.use("/api/line-event", lineEvent);
-app.use("/api/line-user", lineEvent);
+app.use("/api/line-user", lineUser);
 
 app.get('/', (req, res)=>{
   res.json('Line Bot API')
