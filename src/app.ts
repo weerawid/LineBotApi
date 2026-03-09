@@ -24,4 +24,12 @@ process.on('SIGTERM', async () => {
   process.exit(0);
 });
 
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection:', reason);
+});
+
 export default app
