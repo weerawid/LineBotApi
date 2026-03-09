@@ -3,7 +3,6 @@ import * as controler from '../controller/line_user.controller'
 
 const router = express.Router();
 
-router.post('/', controler.inquiry);
 router.post('/create', controler.create);
 
 export default router;
