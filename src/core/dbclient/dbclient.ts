@@ -117,11 +117,36 @@ export class DBClientManager {
     }
 
     try {
-      // Extract keys and values
+      
+      if (!table || typeof table !== 'string') {
+        throw new AppError(
+          "DB_EXECUTEION_FAILURE_00301",
+          "Table name must be a non-empty string"
+        );
+      }
+
+      // Validate values object
+      if (!values || typeof values !== 'object' || Array.isArray(values)) {
+        throw new AppError(
+          "DB_EXECUTEION_FAILURE_00301",
+          "Values must be a non-empty object"
+        );
+      }
+
       const columns = Object.keys(values);
+      if (columns.length === 0) {
+        throw new AppError(
+          "DB_EXECUTEION_FAILURE_00301",
+          "At least one column must be provided"
+        );
+      }
+
       const columnNames = columns.join(", ");
       const placeholders = columns.map(() => "?").join(", ");
-      const params = columns.map((col) => values[col]);
+      // Handle null/undefined values - convert undefined to null
+      const params = columns.map((col) =>
+        values[col] === undefined ? null : values[col]
+      );
 
       // Build SQL query
       const sql = `INSERT INTO ${table} (${columnNames}) VALUES (${placeholders})`;
