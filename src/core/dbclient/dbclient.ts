@@ -1,8 +1,7 @@
 import { createClient } from "@libsql/client"
 import type { Client } from "@libsql/client"
 import { getContext } from "../context/app_context";
-import { logErrorMessage } from "../error/error.helper";
-import { AppError, ErrorKey, ErrorMap } from "../error/error.app";
+import { AppError, ErrorKey } from "../error/error.app";
 
 let dbClient: Client | null = null;
 
@@ -74,7 +73,7 @@ export class DBClientManager {
     }
 
     try {
-      const result = await this.client.execute(sql, params);
+      const result = await this.client!.execute(sql, params);
       return result as T;
     } catch (error) {
       throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `execute: Database execution failed: ${error}`);
@@ -128,7 +127,7 @@ export class DBClientManager {
       const sql = `INSERT INTO ${table} (${columnNames}) VALUES (${placeholders})`;
 
       console.log(`Inserting into ${table}:`, values);
-      const result = await this.client.execute(sql, params);
+      const result = await this.client!.execute(sql, params);
       return result;
     } catch (error) {
       throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `insert: Insert operation failed: ${error}`);
@@ -146,12 +145,12 @@ export class DBClientManager {
     operation: (client: Client) => Promise<T>
   ): Promise<T> {
     if (!this.client || !this.isConnected) {
-      throw new AppError(ErrorKey.DB_CONNECT_FAILURE_00300, "custom: Database not connected. Call connect() first");
+      await this.connect();
     }
 
     try {
       console.log(`Executing custom operation: ${operationName}`);
-      const result = await operation(this.client);
+      const result = await operation(this.client!);
       return result as T;
     } catch (error) {
       throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `custom: Custom operation '${operationName}' failed: ${error}`);
