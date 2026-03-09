@@ -1,29 +1,194 @@
 import { createClient } from "@libsql/client"
 import type { Client } from "@libsql/client"
 import { getContext } from "../context/app_context";
+import { logErrorMessage } from "../error/error.helper";
+import { AppError, ErrorKey, ErrorMap } from "../error/error.app";
 
 let dbClient: Client | null = null;
 
-export async function getDBClient(): Promise<Client> {
-  if (dbClient) {
-    return dbClient;
+export interface DBConfig {
+  url: string,
+  authToken: string
+}
+
+export class DBClientManager {
+  private static instance: DBClientManager | null = null;
+  private client: Client | null = null;
+  private config: DBConfig | null = null;
+  private isConnected: boolean = false;
+
+  /**
+   * Private constructor to prevent direct instantiation
+   */
+  private constructor() {}
+
+  /**
+   * Get singleton instance of DBClientManager
+   */
+  static getInstance(): DBClientManager {
+    if (!this.instance) {
+      this.instance = new DBClientManager();
+    }
+    return this.instance;
   }
 
-  const context = await getContext();
-
-  const config = context.config as Record<string, string>;
-
-  const url = config["TURSO_URL"];
-  const token = config["TURSO_TOKEN"];
-
-  if (!url || !token) {
-    throw new Error("TURSO_URL or TURSO_TOKEN is missing in config");
+  /**
+   * Reset singleton instance (useful for testing)
+   */
+  static resetInstance(): void {
+    this.instance = null;
   }
 
-  dbClient = createClient({
-    url,
-    authToken: token,
-  });
+  /**
+   * Initialize and connect to database
+   */
+  async connect() {
+    try {
+      if (this.isConnected && this.client != null) {
+        console.log("Database already connected")
+        return;
+      }
 
-  return dbClient;
+      const context = await getContext()
+      const config = context.config as Record<string, string>;
+
+      this.config = { url: config["TURSO_URL"], authToken: config["TURSO_TOKEN"] }
+      this.client = createClient({
+        url: this.config.url,
+        authToken: this.config.authToken,
+      });
+
+      this.isConnected = true
+      console.log("Database connected successfully")
+    } catch (e) {
+      logErrorMessage(ErrorMap.DB_CONNECT_FAILURE_00300)
+    }
+  }
+
+  /**
+   * Execute raw SQL query
+   */
+  async execute<T = any>(sql: string, params?: any[]): Promise<T> {
+    if (!this.client || !this.isConnected) {
+      throw new AppError(ErrorKey.DB_CONNECT_FAILURE_00300, "Database not connected. Call connect() first");
+    }
+
+    try {
+      const result = await this.client.execute(sql, params);
+      return result as T;
+    } catch (error) {
+      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `Database execution failed: ${error}`);
+    }
+  }
+
+  /**
+   * Execute batch queries
+   */
+  async executeBatch<T = any>(queries: Array<{ sql: string; params?: any[] }>): Promise<T[]> {
+    if (!this.client || !this.isConnected) {
+      throw new AppError(ErrorKey.DB_CONNECT_FAILURE_00300, "Database not connected. Call connect() first");
+    }
+
+    try {
+      const results = await Promise.all(
+        queries.map((query) => this.client!.execute(query.sql, query.params))
+      );
+      return results as T[];
+    } catch (error) {
+      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `Batch execution failed: ${error}`);
+    }
+  }
+
+  /**
+   * Insert data into table
+   * @param table - Table name
+   * @param values - Object with column names as keys and values
+   * @returns Execution result
+   *
+   * Usage:
+   * await manager.insert('users', {
+   *   name: 'John',
+   *   email: 'john@example.com',
+   *   age: 30
+   * });
+   */
+  async insert(table: string, values: Record<string, any>): Promise<any> {
+    if (!this.client || !this.isConnected) {
+      throw new AppError(ErrorKey.DB_CONNECT_FAILURE_00300, "Database not connected. Call connect() first");
+    }
+
+    try {
+      // Extract keys and values
+      const columns = Object.keys(values);
+      const columnNames = columns.join(", ");
+      const placeholders = columns.map(() => "?").join(", ");
+      const params = columns.map((col) => values[col]);
+
+      // Build SQL query
+      const sql = `INSERT INTO ${table} (${columnNames}) VALUES (${placeholders})`;
+
+      console.log(`Inserting into ${table}:`, values);
+      const result = await this.client.execute(sql, params);
+      return result;
+    } catch (error) {
+      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `Insert operation failed: ${error}`);
+    }
+  }
+
+  /**
+   * Custom database operation - can be used to define reusable methods
+   * Usage: manager.custom<User>('selectUserById', async (client) => {
+   *   return await client.execute('SELECT * FROM users WHERE id = ?', [1]);
+   * })
+   */
+  async custom<T = any>(
+    operationName: string,
+    operation: (client: Client) => Promise<T>
+  ): Promise<T> {
+    if (!this.client || !this.isConnected) {
+      throw new AppError(ErrorKey.DB_CONNECT_FAILURE_00300, "Database not connected. Call connect() first");
+    }
+
+    try {
+      console.log(`Executing custom operation: ${operationName}`);
+      const result = await operation(this.client);
+      return result as T;
+    } catch (error) {
+      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `Custom operation '${operationName}' failed: ${error}`);
+    }
+  }
+
+  /**
+   * Disconnect from database
+   */
+  async disconnect(): Promise<void> {
+    try {
+      if (this.client) {
+        // Close connection if client supports it
+        if (typeof (this.client as any).close === "function") {
+          await (this.client as any).close();
+        }
+      }
+      this.client = null;
+      this.isConnected = false;
+      console.log("Database disconnected");
+    } catch (error) {
+      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `Failed to disconnect: ${error}`);
+    }
+  }
+
+  /**
+   * Check connection status
+   */
+  getConnectionStatus(): boolean {
+    return this.isConnected;
+  }
+
+  /**
+   * Get current config (without token for security)
+   */
+  getConfig(): Partial<DBConfig> | null {
+    if (!this.config) return null;
+    return { url: this.config.url };
+  }
 }

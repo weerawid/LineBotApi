@@ -1,28 +1,22 @@
 import type { Request, Response } from "express"
-import { getDBClient } from "../../core/dbclient/dbclient"
-import type { Client } from "@libsql/client"
-import { ErrorMap } from "../../core/error/error.map"
+import { DBClientManager } from "../../core/dbclient/dbclient"
 import { logErrorMessage } from "../../core/error/error.helper"
+import { AppError, ErrorKey, ErrorMap, getErrorMessage } from "../../core/error/error.app"
 
 export async function inquiry(
   req: Request,
   res: Response
 ): Promise<void> {
   try {
-    const dbclient: Client = await getDBClient()
+    const dbclient: DBClientManager = DBClientManager.getInstance()
 
-    const result = await dbclient.execute(
-      "SELECT * FROM line_event le"
-    )
+    const result = await dbclient.execute( "SELECT * FROM line_event le")
 
     res.json({
       data: result.rows,
     })
   } catch (err: unknown) {
-    const message =
-      err instanceof Error ? err.message : "Unknown error"
-
-    res.status(500).json(ErrorMap.UNKNOW_ERROR_00000)
+    res.status(500).json(getErrorMessage(err));
   }
 }
 
@@ -31,7 +25,7 @@ export async function create(
   res: Response
 ): Promise<void> {
   try {
-    const dbclient: Client = await getDBClient()
+    const dbclient: DBClientManager = DBClientManager.getInstance()
 
     const { eventValue } = req.body
     const eventData = JSON.parse(eventValue)
@@ -45,15 +39,17 @@ export async function create(
       let isValidated = await validateEvent(eventId)
 
       if (isValidated) {
-        const result = await dbclient.execute({
-          sql: "INSERT INTO line_event(line_event_id, line_event_message, line_group_id, line_event_timestamp, line_event_destination) VALUES (?, ?, ?, ?, ?)",
-          args: [eventId, eventValue, groupId, timestamp, destination],
-        })  
+        const result = await dbclient.insert("line_event", {
+          line_event_id: eventId,
+          line_event_message: eventValue,
+          line_group_id: groupId,
+          line_event_timestamp: timestamp,
+          line_event_destination: destination
+        })
       } else {
-        
-        logErrorMessage(ErrorMap.DB_DUPLICATE_00301)
+        res.status(500).json(ErrorMap.DB_DUPLICATE_00321);
       }
-
+      
       listStatus.push({
         id: eventId,
         insertStatus: isValidated
@@ -67,23 +63,16 @@ export async function create(
       }
     })
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Unknown error"
-    res.status(500).json({
-      code: "99999",
-      message,
-    })
+    res.status(500).json(getErrorMessage(err));
   }
 }
 
 async function validateEvent(eventId: string) {
   try {
-    const dbclient: Client = await getDBClient()
-    const result = await dbclient.execute(
-      "SELECT * FROM line_event le WHERE line_event_id = ?", [eventId]
-    )
+    const dbclient: DBClientManager = DBClientManager.getInstance()
+    const result = await dbclient.execute("SELECT * FROM line_event le WHERE line_event_id = ?", [eventId])
    return result.rows.length == 0
   } catch (err: unknown) {
-    logErrorMessage(err)
-    return false
+    throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `Event validation failed: ${err}` )
   }
 }
