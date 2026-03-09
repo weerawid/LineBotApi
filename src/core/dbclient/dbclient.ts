@@ -70,7 +70,7 @@ export class DBClientManager {
    */
   async execute<T = any>(sql: string, params?: any[]): Promise<T> {
     if (!this.client || !this.isConnected) {
-      throw new AppError(ErrorKey.DB_CONNECT_FAILURE_00300, "execute: Database not connected.");
+      await this.connect()
     }
 
     try {
@@ -86,7 +86,7 @@ export class DBClientManager {
    */
   async executeBatch<T = any>(queries: Array<{ sql: string; params?: any[] }>): Promise<T[]> {
     if (!this.client || !this.isConnected) {
-      throw new AppError(ErrorKey.DB_CONNECT_FAILURE_00300, "executeBatch: Database not connected.");
+      await this.connect();
     }
 
     try {
@@ -114,7 +114,7 @@ export class DBClientManager {
    */
   async insert(table: string, values: Record<string, any>): Promise<any> {
     if (!this.client || !this.isConnected) {
-      throw new AppError(ErrorKey.DB_CONNECT_FAILURE_00300, "insert: Database not connected. Call connect() first");
+      await this.connect();
     }
 
     try {
