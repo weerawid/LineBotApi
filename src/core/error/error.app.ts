@@ -115,9 +115,13 @@ export function createAppError(message: string | null = null): AppError {
 
 export function getErrorMessage(error: unknown): string {
   if (error instanceof AppError) {
-    return error.message;
+    return JSON.stringify(error.toJSON());
   } else if (error instanceof Error) {
-    return error.message;
+    return JSON.stringify({
+      name: error.name,
+      message: error.message,
+      stack: error.stack
+    });
   } else {
     return "Unknown error";
   }
