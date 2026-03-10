@@ -56,6 +56,12 @@ export async function update(
     }, {
       line_message_id: userId
     })
+    res.status(201).json({
+      success: true,
+      data: {
+        status: "success"
+      }
+    })
   } catch (err: unknown) {
     res.status(500).json(getErrorMessage(err));
   }

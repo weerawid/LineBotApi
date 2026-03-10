@@ -141,7 +141,7 @@ export class DBClientManager {
       // Build SQL query
       const sql = `INSERT INTO ${table} (${columnNames}) VALUES (${placeholders})`;
 
-      console.log(`Inserting into ${table}:`, values);
+      // console.log(`Inserting into ${table}:`, values);
       const result = await this.client!.execute(sql, params);
       return result;
     } catch (error) {
@@ -163,7 +163,9 @@ export class DBClientManager {
       if (!values || typeof values !== 'object' || Array.isArray(values)) {
         throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301,"Values must be a non-empty object");
       }
-      const valueFiltered = Object.values(values).filter(value => value !== undefined);
+      const valueFiltered =  Object.fromEntries(
+        Object.entries(values).filter(([_, v]) => v !== undefined)
+      )
       if (valueFiltered.length === 0) {
         throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, "At least one column must be provided for update");
       }
@@ -181,7 +183,7 @@ export class DBClientManager {
       const whereParams = Object.values(whereClause);
 
       const sql = `UPDATE ${table} SET ${setClause} WHERE ${whereClauseConditions}`;
-      console.log(`Update sql ${sql}:`, [...params, ...whereParams]);
+      // console.log(`Update sql ${sql}:`, [...params, ...whereParams]);
       const result = await this.client!.execute(sql, [...params, ...whereParams]);
       return result;
     } catch (error) {
