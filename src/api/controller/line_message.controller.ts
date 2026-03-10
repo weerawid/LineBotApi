@@ -45,7 +45,7 @@ export async function update(
   try {
     const userId = req.params.id
     const { text, type, action, quotedToken, quotedId } = req.body
-
+    console.log(`Updating message for user ${userId} with text: ${text}, type: ${type}, action: ${action}, quotedToken: ${quotedToken}, quotedId: ${quotedId}`);
     const dbclient: DBClientManager = DBClientManager.getInstance()
     const result = await dbclient.update("line_message", {
       line_message_text: text,
