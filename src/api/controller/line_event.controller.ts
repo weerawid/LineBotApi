@@ -30,7 +30,6 @@ export async function create(
     const { eventValue, eventDestination } = req.body
     const event = JSON.parse(eventValue)
 
-    const listStatus = []
     let eventId = event.webhookEventId
     let groupId = event.source.groupId
     let timestamp = new Date(event.timestamp).toISOString()
@@ -47,16 +46,11 @@ export async function create(
     } else {
       res.status(500).json(ErrorMap.DB_DUPLICATE_00321);
     }
-      
-      listStatus.push({
-        id: eventId,
-        insertStatus: isValidated
-      })
 
     res.status(201).json({
       success: true,
       data: {
-        eventStatus: listStatus
+        status: "success"
       }
     })
   } catch (err: unknown) {
