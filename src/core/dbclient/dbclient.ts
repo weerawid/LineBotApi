@@ -117,28 +117,18 @@ export class DBClientManager {
     }
 
     try {
-      
       if (!table || typeof table !== 'string') {
-        throw new AppError(
-          "DB_EXECUTEION_FAILURE_00301",
-          "Table name must be a non-empty string"
-        );
+        throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301,"Table name must be a non-empty string");
       }
 
       // Validate values object
       if (!values || typeof values !== 'object' || Array.isArray(values)) {
-        throw new AppError(
-          "DB_EXECUTEION_FAILURE_00301",
-          "Values must be a non-empty object"
-        );
+        throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301,"Values must be a non-empty object");
       }
 
       const columns = Object.keys(values);
       if (columns.length === 0) {
-        throw new AppError(
-          "DB_EXECUTEION_FAILURE_00301",
-          "At least one column must be provided"
-        );
+        throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, "At least one column must be provided");
       }
 
       const columnNames = columns.join(", ");
@@ -156,6 +146,45 @@ export class DBClientManager {
       return result;
     } catch (error) {
       throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `insert: Insert operation failed: ${error}`);
+    }
+  }
+
+  async update(table: string, values: Record<string, any>, whereClause: Record<string, any>): Promise<any> {
+    if (!this.client || !this.isConnected) {
+      await this.connect();
+    }
+
+    try {
+      if (!table || typeof table !== 'string') {
+        throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301,"Table name must be a non-empty string");
+      }
+
+      // Validate values object
+      if (!values || typeof values !== 'object' || Array.isArray(values)) {
+        throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301,"Values must be a non-empty object");
+      }
+      const valueFiltered = Object.values(values).filter(value => value !== undefined);
+      if (valueFiltered.length === 0) {
+        throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, "At least one column must be provided for update");
+      }
+      const columns = Object.keys(valueFiltered);
+      if (columns.length === 0) {
+        throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, "At least one column must be provided");
+      }
+
+      const setClause = columns.map(col => `${col} = ?`).join(", ");
+      const params = columns.map((col) =>
+        values[col] === undefined ? null : values[col]
+      );
+
+      const whereClauseConditions = Object.keys(whereClause).map(col => `${col} = ?`).join(" AND ");
+      const whereParams = Object.values(whereClause);
+
+      const sql = `UPDATE ${table} SET ${setClause} WHERE ${whereClauseConditions}`;
+      const result = await this.client!.execute(sql, [...params, ...whereParams]);
+      return result;
+    } catch (error) {
+      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `update: Update operation failed: ${error}`);
     }
   }
 

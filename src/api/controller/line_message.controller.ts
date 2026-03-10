@@ -38,6 +38,29 @@ export async function create(
   }
 }
 
+export async function update(
+  req: Request,
+  res: Response
+): Promise<void> {
+  try {
+    const userId = req.params.id
+    const { text, type, action, quotedToken, quotedId } = req.body
+
+    const dbclient: DBClientManager = DBClientManager.getInstance()
+    const result = await dbclient.update("line_message", {
+      line_message_text: text,
+      line_message_type: type,
+      line_message_action: action,
+      line_message_quoted_token: quotedToken,
+      line_message_quoted_id: quotedId
+    }, {
+      line_message_id: userId
+    })
+  } catch (err: unknown) {
+    res.status(500).json(getErrorMessage(err));
+  }
+}
+
 async function validateUser(userId: string) {
   try {
     const dbclient: DBClientManager = DBClientManager.getInstance()
