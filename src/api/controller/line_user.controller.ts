@@ -10,14 +10,14 @@ export async function create(
   try {
     const dbclient: DBClientManager = DBClientManager.getInstance()
 
-    const { userId, userAddress, userDesc } = req.body
-    let isValidated = await validateUser(userId)
+    const { id, address, description } = req.body
+    let isValidated = await validateUser(id)
 
     if (isValidated) {
       const result = await dbclient.insert("line_user", {
-        line_user_id: userId,
-        line_user_address: userAddress,
-        line_user_desc: userDesc
+        line_user_id: id,
+        line_user_address: address,
+        line_user_desc: description
       })
     } else {
       logErrorMessage(ErrorMap.DB_DUPLICATE_00321)

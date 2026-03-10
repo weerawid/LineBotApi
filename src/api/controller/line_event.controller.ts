@@ -27,21 +27,21 @@ export async function create(
   try {
     const dbclient: DBClientManager = DBClientManager.getInstance()
 
-    const { eventValue, eventDestination } = req.body
-    const event = JSON.parse(eventValue)
+    const { event, destination } = req.body
+    const jsonEvent = JSON.parse(event)
 
-    let eventId = event.webhookEventId
-    let groupId = event.source.groupId
-    let timestamp = new Date(event.timestamp).toISOString()
+    let eventId = jsonEvent.webhookEventId
+    let groupId = jsonEvent.source.groupId
+    let timestamp = new Date(jsonEvent.timestamp).toISOString()
     let isValidated = await validateEvent(eventId)
 
     if (isValidated) {
       const result = await dbclient.insert("line_event", {
         line_event_id: eventId,
-        line_event_message: eventValue,
+        line_event_message: jsonEvent,
         line_group_id: groupId,
         line_event_timestamp: timestamp,
-        line_event_destination: eventDestination
+        line_event_destination: destination
       })
     } else {
       res.status(500).json(ErrorMap.DB_DUPLICATE_00321);
