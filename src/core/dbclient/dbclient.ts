@@ -164,9 +164,9 @@ export class DBClientManager {
         throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301,"Values must be a non-empty object");
       }
       const valueFiltered =  Object.fromEntries(
-        Object.entries(values).filter(([_, v]) => v !== undefined)
+        Object.entries(values).filter(([_, v]) => v !== undefined && v !== null)
       )
-      if (valueFiltered.length === 0) {
+      if (Object.keys(valueFiltered).length === 0) {
         throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, "At least one column must be provided for update");
       }
       const columns = Object.keys(valueFiltered);
