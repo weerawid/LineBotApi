@@ -27,9 +27,8 @@ export async function create(
   try {
     const dbclient: DBClientManager = DBClientManager.getInstance()
 
-    const { eventValue } = req.body
+    const { eventValue, eventDestination } = req.body
     const eventData = JSON.parse(eventValue)
-    const destination = eventData.destination
 
     const listStatus = []
     for (const event of eventData.events) {
@@ -44,7 +43,7 @@ export async function create(
           line_event_message: eventValue,
           line_group_id: groupId,
           line_event_timestamp: timestamp,
-          line_event_destination: destination
+          line_event_destination: eventDestination
         })
       } else {
         res.status(500).json(ErrorMap.DB_DUPLICATE_00321);
