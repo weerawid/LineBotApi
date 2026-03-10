@@ -181,6 +181,7 @@ export class DBClientManager {
       const whereParams = Object.values(whereClause);
 
       const sql = `UPDATE ${table} SET ${setClause} WHERE ${whereClauseConditions}`;
+      console.log(`Update sql ${sql}:`, [...params, ...whereParams]);
       const result = await this.client!.execute(sql, [...params, ...whereParams]);
       return result;
     } catch (error) {
