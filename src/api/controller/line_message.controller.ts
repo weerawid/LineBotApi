@@ -10,7 +10,7 @@ export async function create(
   try {
     const dbclient: DBClientManager = DBClientManager.getInstance()
 
-    const { id, text, type, action, quotedToken, quotedId } = req.body
+    const { id, text, type, action, quotedToken, quotedId, eventId } = req.body
     let isValidated = await validateUser(id)
 
     if (isValidated) {
@@ -20,7 +20,8 @@ export async function create(
         line_message_type: type,
         line_message_action: action,
         line_message_quoted_token: quotedToken,
-        line_message_quoted_id: quotedId
+        line_message_quoted_id: quotedId,
+        line_event_id: eventId
       })
     } else {
       logErrorMessage(ErrorMap.DB_DUPLICATE_00321)
