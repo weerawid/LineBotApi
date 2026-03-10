@@ -38,7 +38,7 @@ export async function create(
     if (isValidated) {
       const result = await dbclient.insert("line_event", {
         line_event_id: eventId,
-        line_event_message: jsonEvent,
+        line_event_message: event,
         line_group_id: groupId,
         line_event_timestamp: timestamp,
         line_event_destination: destination
