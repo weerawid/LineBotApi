@@ -80,6 +80,34 @@ export class DBClientManager {
     }
   }
 
+  async getSQLData<T = any>(sql: string, params?: any[]): Promise<T[]> {
+    if (!this.client || !this.isConnected) {
+      await this.connect()
+    }
+
+    try {
+      const result = await this.client!.execute(sql, params);
+      return result.rows as T[];
+    } catch (error) {
+      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `getSQLData: Database execution failed: ${error}`);
+    }
+  } 
+
+  async getRowsCount(table: string, whereClause: Record<string, any>): Promise<number> {
+    if (!this.client || !this.isConnected) {
+      await this.connect()
+    }
+
+    try {
+      const whereConditions = Object.keys(whereClause).map(col => `${col} = ?`).join(" AND ");
+      const params = Object.values(whereClause);
+      const sql = `SELECT COUNT(*) as count FROM ${table} WHERE ${whereConditions}`;
+      const result = await this.client!.execute(sql, params);
+      return result.rows[0].count as number || 0;
+    } catch (error) {
+      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `getRowsCount: Database execution failed: ${error}`);
+    }
+  }
   /**
    * Execute batch queries
    */
@@ -98,6 +126,28 @@ export class DBClientManager {
     }
   }
 
+  async selectAll<T = any>(table: string, whereClause?: Record<string, any> | null): Promise<T[]> {
+    if (!this.client || !this.isConnected) {
+      await this.connect()
+    }
+
+    try {
+      let sql = `SELECT * FROM ${table}`;
+      let params: any[] = [];
+
+      if (whereClause && Object.keys(whereClause).length > 0) {
+        const whereConditions = Object.keys(whereClause).map(col => `${col} = ?`).join(" AND ");
+        sql += ` WHERE ${whereConditions}`;
+        params = Object.values(whereClause);
+      }
+
+      const result = await this.client!.execute(sql, params);
+      return result.rows as T[];
+    } catch (error) {
+      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `selectAll: Database execution failed: ${error}`);
+    }
+  }
+
   /**
    * Insert data into table
    * @param table - Table name
@@ -111,7 +161,7 @@ export class DBClientManager {
    *   age: 30
    * });
    */
-  async insert(table: string, values: Record<string, any>): Promise<any> {
+  async insert(table: string, values: Record<string, any>): Promise<boolean> {
     if (!this.client || !this.isConnected) {
       await this.connect();
     }
@@ -140,16 +190,14 @@ export class DBClientManager {
 
       // Build SQL query
       const sql = `INSERT INTO ${table} (${columnNames}) VALUES (${placeholders})`;
-
-      // console.log(`Inserting into ${table}:`, values);
       const result = await this.client!.execute(sql, params);
-      return result;
+      return result.rowsAffected === 1;
     } catch (error) {
       throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `insert: Insert operation failed: ${error}`);
     }
   }
 
-  async update(table: string, values: Record<string, any>, whereClause: Record<string, any>): Promise<any> {
+  async update(table: string, values: Record<string, any>, whereClause: Record<string, any>): Promise<boolean> {
     if (!this.client || !this.isConnected) {
       await this.connect();
     }
@@ -185,7 +233,7 @@ export class DBClientManager {
       const sql = `UPDATE ${table} SET ${setClause} WHERE ${whereClauseConditions}`;
       // console.log(`Update sql ${sql}:`, [...params, ...whereParams]);
       const result = await this.client!.execute(sql, [...params, ...whereParams]);
-      return result;
+      return result.rowsAffected === 1;
     } catch (error) {
       throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `update: Update operation failed: ${error}`);
     }

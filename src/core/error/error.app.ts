@@ -3,11 +3,13 @@ const CODE_00000_UNKNOW_ERROR = "00000";
 const CODE_00300_DATABASE_CONNECT_FAILURE = "00300";
 const CODE_00301_DATABASE_EXECUTEION_FAILURE = "00301";
 const CODE_00321_DATABASE_DUPLICATE = "00321";
+const CODE_00322_DATABASE_DATA_NOT_FOUND = "00322";
 
 // Error info interface
 export interface ErrorInfo {
   code: string;
   message: string;
+  details?: string;
 }
 
 // Error keys enum
@@ -15,7 +17,8 @@ export enum ErrorKey {
   UNKNOW_ERROR_00000 = "UNKNOW_ERROR_00000",
   DB_CONNECT_FAILURE_00300 = "DB_CONNECT_FAILURE_00300",
   DB_EXECUTEION_FAILURE_00301 = "DB_EXECUTEION_FAILURE_00301",
-  DB_DUPLICATE_00321 = "DB_DUPLICATE_00321"
+  DB_DUPLICATE_00321 = "DB_DUPLICATE_00321",
+  DB_DATA_NOT_FOUND_00322 = "DB_DATA_NOT_FOUND_00322"
 }
 
 // Error map
@@ -35,6 +38,10 @@ export const ErrorMap = {
   DB_DUPLICATE_00321: {
     code: CODE_00321_DATABASE_DUPLICATE,
     message: "Database Duplicate"
+  },
+  DB_DATA_NOT_FOUND_00322: {
+    code: CODE_00322_DATABASE_DATA_NOT_FOUND,
+    message: "Database Data Not Found"
   }
 } as const satisfies Record<ErrorKey, ErrorInfo>;
 
