@@ -31,9 +31,9 @@ export async function getSlipApi(
       res.status(200).json({
         success: true,
         data: {
-          slip_api_name: sysSlipData?.sys_slip_api,
-          slip_api_url: sysConfig?.url,
-          slip_api_key: sysConfig?.key
+          api: sysSlipData?.sys_slip_api,
+          url: sysConfig?.url,
+          key: sysConfig?.key
         }
       });
     } else {
