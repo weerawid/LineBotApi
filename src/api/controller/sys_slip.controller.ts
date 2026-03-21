@@ -50,7 +50,7 @@ export async function trick(
 ): Promise<void> {
   try {
     const { api } = req.params
-    const sysSlipList = await getSysSlip({ sys_slip_api: api }) as Result
+    const sysSlipList = await getSysSlip({ filter: { sys_slip_api: api } }) as Result
     const sysSlipData = (sysSlipList.data as SysSlipModel[] | null)?.[0]
     if (!sysSlipData) {
       throw new AppError(ErrorKey.DB_DATA_NOT_FOUND_00322)
@@ -98,22 +98,21 @@ async function preConditionGetSysSlip(): Promise<SysSlipModel[] | null> {
   return sysSlipData
 }
 
-async function initialSysSlip(): Promise<SysSlipModel[] | null> {
+async function initialSysSlip(): Promise<SysSlipModel[] | undefined> {
   const context = await getContext()
   const config = context.config
   const slipApiList = (JSON.parse(config["SLIP_API"] as string) as SlipApiModel).slip
   var sysSlipData = await updateSysSlipList()
 
-  if (!sysSlipData) throw new AppError(ErrorKey.DB_DATA_NOT_FOUND_00322)
-
-  if (sysSlipData.length === 0) {
+  if (sysSlipData && sysSlipData.length === 0) {
     for (const slipApi of slipApiList) {
       await insertSysSlip({
         sys_slip_api: slipApi.apiName,
         sys_slip_value: 0,
         sys_slip_max: slipApi.maxValue,
         lastupdate: new Date(),
-        created_at: new Date()
+        created_at: new Date(),
+        active: true
       })
     }
   } else {      
@@ -125,7 +124,8 @@ async function initialSysSlip(): Promise<SysSlipModel[] | null> {
           sys_slip_value: 0,
           sys_slip_max: slipApi.maxValue,
           lastupdate: new Date(),
-          created_at: new Date()
+          created_at: new Date(),
+          active: true
         })
       }
     }
@@ -134,7 +134,11 @@ async function initialSysSlip(): Promise<SysSlipModel[] | null> {
   return sysSlipData
 }
 
-async function updateSysSlipList(): Promise<SysSlipModel[] | null> {
-  var result = await getSysSlip() as Result
-  return result.data as SysSlipModel[] | null
+async function updateSysSlipList(): Promise<SysSlipModel[] | undefined> {
+  var result = await getSysSlip({filter: { active: 1 }}) as Result
+  if (result.success) {
+    return result.data as SysSlipModel[] | []
+  } else {
+    return undefined
+  }
 }

@@ -7,7 +7,8 @@ export interface Parameters {
   sys_slip_value: number,
   sys_slip_max: number,
   lastupdate: Date,
-  created_at: Date
+  created_at: Date,
+  active: boolean
 }
 
 export interface Result {
@@ -30,7 +31,8 @@ export default async function insertSysSlip(params: Parameters): Promise<Result 
         sys_slip_value: params.sys_slip_value,
         sys_slip_max: params.sys_slip_max,
         lastupdate: params.lastupdate,
-        created_at: params.created_at
+        created_at: params.created_at,
+        active: params.active
       })
       return {
         success: result
