@@ -19,8 +19,7 @@ export default async function insertLineUser(params: Parameters): Promise<Result
     const count = await dbclient.getRowsCount("line_user", { line_user_id: params.user_id })
     if (count > 0) {
       return {
-        success: false,
-        error: ErrorMap.DB_DUPLICATE_00321
+        success: true
       };
     } else {
       const result = await dbclient.insert("line_user", {
