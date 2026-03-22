@@ -140,7 +140,7 @@ export class DBClientManager {
         sql += ` WHERE ${whereConditions}`;
         params = Object.values(whereClause);
       }
-
+      console.log(`sql: ${sql}`)
       const result = await this.client!.execute(sql, params);
       return result.rows as T[];
     } catch (error) {

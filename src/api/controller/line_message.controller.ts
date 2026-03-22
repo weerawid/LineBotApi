@@ -2,6 +2,7 @@ import type { Request, Response } from "express"
 import insertLineMessage from "../../usecase/insert-line-message.usecase"
 import updateLineMessage from "../../usecase/update-line-message.usecase"
 import { getErrorMessage } from "../../core/error/error.app";
+import { getMessage } from "../../usecase/get-message.usecase";
 
 type Params = {
   id: string;
@@ -44,6 +45,21 @@ export async function update(
         quoted_token: quotedToken,
         quoted_id: quotedId
       }
+    })  
+    res.status(201).json(result)
+  } catch (err: unknown) {
+    res.status(500).json(getErrorMessage(err));
+  }
+}
+
+export async function get(
+  req: Request<Params>,
+  res: Response
+): Promise<void> {
+  try {
+    const messageId = req.params.id
+    const result = await getMessage({
+      filter: { line_message_id: messageId}  
     })  
     res.status(201).json(result)
   } catch (err: unknown) {
