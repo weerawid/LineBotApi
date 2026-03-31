@@ -1,9 +1,10 @@
 // Define error codes
 const CODE_00000_UNKNOW_ERROR = "00000";
 const CODE_00300_DATABASE_CONNECT_FAILURE = "00300";
-const CODE_00301_DATABASE_EXECUTEION_FAILURE = "00301";
+const CODE_00301_DATABASE_EXECUTION_FAILURE = "00301";
 const CODE_00321_DATABASE_DUPLICATE = "00321";
 const CODE_00322_DATABASE_DATA_NOT_FOUND = "00322";
+const CODE_10001_API_MISSING_PARAMETER = "10001";
 
 // Error info interface
 export interface ErrorInfo {
@@ -14,11 +15,13 @@ export interface ErrorInfo {
 
 // Error keys enum
 export enum ErrorKey {
-  UNKNOW_ERROR_00000 = "UNKNOW_ERROR_00000",
   DB_CONNECT_FAILURE_00300 = "DB_CONNECT_FAILURE_00300",
-  DB_EXECUTEION_FAILURE_00301 = "DB_EXECUTEION_FAILURE_00301",
+  DB_EXECUTION_FAILURE_00301 = "DB_EXECUTION_FAILURE_00301",
   DB_DUPLICATE_00321 = "DB_DUPLICATE_00321",
-  DB_DATA_NOT_FOUND_00322 = "DB_DATA_NOT_FOUND_00322"
+  DB_DATA_NOT_FOUND_00322 = "DB_DATA_NOT_FOUND_00322",
+  API_MISSING_PARAMETER_10001 = "API_MISSING_PARAMETER_10001",
+
+  UNKNOW_ERROR_00000 = "UNKNOW_ERROR_00000"
 }
 
 // Error map
@@ -31,8 +34,8 @@ export const ErrorMap = {
     code: CODE_00300_DATABASE_CONNECT_FAILURE,
     message: "Database Connection Failure"
   },
-  DB_EXECUTEION_FAILURE_00301: {
-    code: CODE_00301_DATABASE_EXECUTEION_FAILURE,
+  DB_EXECUTION_FAILURE_00301: {
+    code: CODE_00301_DATABASE_EXECUTION_FAILURE,
     message: "Database Executeion Failure"
   },
   DB_DUPLICATE_00321: {
@@ -42,19 +45,16 @@ export const ErrorMap = {
   DB_DATA_NOT_FOUND_00322: {
     code: CODE_00322_DATABASE_DATA_NOT_FOUND,
     message: "Database Data Not Found"
+  },
+  API_MISSING_PARAMETER_10001: {
+    code: CODE_10001_API_MISSING_PARAMETER,
+    message: "API Missing Parameter"
   }
 } as const satisfies Record<ErrorKey, ErrorInfo>;
 
 // Type for error map keys
 export type ErrorMapKey = keyof typeof ErrorMap;
 
-/**
- * Custom Application Error class
- * Usage:
- * throw new AppError(ErrorKey.DB_CONNECT_FAILURE);
- * throw new AppError(ErrorKey.DB_CONNECT_FAILURE, 'Connection timeout');
- * throw new AppError('DB_CONNECT_FAILURE_00300'); // also works
- */
 export class AppError extends Error {
   code: string;
   message: string;

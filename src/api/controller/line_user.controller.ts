@@ -1,5 +1,5 @@
 import type { Request, Response } from "express"
-import insertLineUser from "../../usecase/insert-line-user.usecase"
+import insertLineUser from "../../usecase/insert_line_user.usecase"
 import { getErrorMessage } from "../../core/error/error.app"
 
 export async function create(

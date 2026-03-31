@@ -76,7 +76,7 @@ export class DBClientManager {
       const result = await this.client!.execute(sql, params);
       return result as T;
     } catch (error) {
-      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `execute: Database execution failed: ${error}`);
+      throw new AppError(ErrorKey.DB_EXECUTION_FAILURE_00301, `execute: Database execution failed: ${error}`);
     }
   }
 
@@ -89,7 +89,7 @@ export class DBClientManager {
       const result = await this.client!.execute(sql, params);
       return result.rows as T[];
     } catch (error) {
-      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `getSQLData: Database execution failed: ${error}`);
+      throw new AppError(ErrorKey.DB_EXECUTION_FAILURE_00301, `getSQLData: Database execution failed: ${error}`);
     }
   } 
 
@@ -105,7 +105,7 @@ export class DBClientManager {
       const result = await this.client!.execute(sql, params);
       return result.rows[0].count as number || 0;
     } catch (error) {
-      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `getRowsCount: Database execution failed: ${error}`);
+      throw new AppError(ErrorKey.DB_EXECUTION_FAILURE_00301, `getRowsCount: Database execution failed: ${error}`);
     }
   }
   /**
@@ -122,7 +122,7 @@ export class DBClientManager {
       );
       return results as T[];
     } catch (error) {
-      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `executeBatch: Batch execution failed: ${error}`);
+      throw new AppError(ErrorKey.DB_EXECUTION_FAILURE_00301, `executeBatch: Batch execution failed: ${error}`);
     }
   }
 
@@ -144,7 +144,7 @@ export class DBClientManager {
       const result = await this.client!.execute(sql, params);
       return result.rows as T[];
     } catch (error) {
-      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `selectAll: Database execution failed: ${error}`);
+      throw new AppError(ErrorKey.DB_EXECUTION_FAILURE_00301, `selectAll: Database execution failed: ${error}`);
     }
   }
 
@@ -168,17 +168,17 @@ export class DBClientManager {
 
     try {
       if (!table || typeof table !== 'string') {
-        throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301,"Table name must be a non-empty string");
+        throw new AppError(ErrorKey.DB_EXECUTION_FAILURE_00301,"Table name must be a non-empty string");
       }
 
       // Validate values object
       if (!values || typeof values !== 'object' || Array.isArray(values)) {
-        throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301,"Values must be a non-empty object");
+        throw new AppError(ErrorKey.DB_EXECUTION_FAILURE_00301,"Values must be a non-empty object");
       }
 
       const columns = Object.keys(values);
       if (columns.length === 0) {
-        throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, "At least one column must be provided");
+        throw new AppError(ErrorKey.DB_EXECUTION_FAILURE_00301, "At least one column must be provided");
       }
 
       const columnNames = columns.join(", ");
@@ -193,7 +193,7 @@ export class DBClientManager {
       const result = await this.client!.execute(sql, params);
       return result.rowsAffected === 1;
     } catch (error) {
-      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `insert: Insert operation failed: ${error}`);
+      throw new AppError(ErrorKey.DB_EXECUTION_FAILURE_00301, `insert: Insert operation failed: ${error}`);
     }
   }
 
@@ -204,22 +204,22 @@ export class DBClientManager {
 
     try {
       if (!table || typeof table !== 'string') {
-        throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301,"Table name must be a non-empty string");
+        throw new AppError(ErrorKey.DB_EXECUTION_FAILURE_00301,"Table name must be a non-empty string");
       }
 
       // Validate values object
       if (!values || typeof values !== 'object' || Array.isArray(values)) {
-        throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301,"Values must be a non-empty object");
+        throw new AppError(ErrorKey.DB_EXECUTION_FAILURE_00301,"Values must be a non-empty object");
       }
       const valueFiltered =  Object.fromEntries(
         Object.entries(values).filter(([_, v]) => v !== undefined)
       )
       if (Object.keys(valueFiltered).length === 0) {
-        throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, "At least one column must be provided for update");
+        throw new AppError(ErrorKey.DB_EXECUTION_FAILURE_00301, "At least one column must be provided for update");
       }
       const columns = Object.keys(valueFiltered);
       if (columns.length === 0) {
-        throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, "At least one column must be provided");
+        throw new AppError(ErrorKey.DB_EXECUTION_FAILURE_00301, "At least one column must be provided");
       }
 
       const setClause = columns.map(col => `${col} = ?`).join(", ");
@@ -235,7 +235,7 @@ export class DBClientManager {
       const result = await this.client!.execute(sql, [...params, ...whereParams]);
       return result.rowsAffected === 1;
     } catch (error) {
-      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `update: Update operation failed: ${error}`);
+      throw new AppError(ErrorKey.DB_EXECUTION_FAILURE_00301, `update: Update operation failed: ${error}`);
     }
   }
 
@@ -258,7 +258,7 @@ export class DBClientManager {
       const result = await operation(this.client!);
       return result as T;
     } catch (error) {
-      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `custom: Custom operation '${operationName}' failed: ${error}`);
+      throw new AppError(ErrorKey.DB_EXECUTION_FAILURE_00301, `custom: Custom operation '${operationName}' failed: ${error}`);
     }
   }
 
@@ -277,7 +277,7 @@ export class DBClientManager {
       this.isConnected = false;
       console.log("Database disconnected");
     } catch (error) {
-      throw new AppError(ErrorKey.DB_EXECUTEION_FAILURE_00301, `disconnect: Failed to disconnect: ${error}`);
+      throw new AppError(ErrorKey.DB_EXECUTION_FAILURE_00301, `disconnect: Failed to disconnect: ${error}`);
     }
   }
 

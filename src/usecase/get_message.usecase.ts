@@ -1,7 +1,7 @@
 import { DBClientManager } from "../core/dbclient/dbclient";
 import { AppError, ErrorInfo, ErrorKey, getErrorMessage } from "../core/error/error.app";
 import { LineMessageModel } from "../model/line_mesage.model";
-import { SysSlipModel } from "../model/sys-slip.model";
+import { SysSlipModel } from "../model/sys_slip.model";
 
 export interface Request {
   filter?: Record<string, any> | null

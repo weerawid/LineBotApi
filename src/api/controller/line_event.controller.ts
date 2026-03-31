@@ -1,6 +1,6 @@
 import type { Request, Response } from "express"
 import { DBClientManager } from "../../core/dbclient/dbclient"
-import insertLineEvent from "../../usecase/insert-line-event.usecase"
+import insertLineEvent from "../../usecase/insert_line_event.usecase"
 import { getErrorMessage } from "../../core/error/error.app"
 
 export async function inquiry(
