@@ -1,6 +1,6 @@
 import { DBClientManager } from "../core/dbclient/dbclient";
 import { AppError, ErrorInfo, ErrorKey, getErrorMessage } from "../core/error/error.app";
-import { LineAddressModel } from "../model/line_address.model";
+import { LineMenuModel } from "../model/line_menu.model";
 
 export interface Request {
   filter?: Record<string, any> | null
@@ -8,14 +8,14 @@ export interface Request {
 
 export interface Result {
   success: boolean,
-  data?: LineAddressModel[] | null,
+  data?: LineMenuModel[] | null,
   error?: ErrorInfo
 }
 
-export async function getAddress(request: Request): Promise<Result | void> {
+export async function getLineMenu(request: Request): Promise<Result> {
   try {
     const dbclient: DBClientManager = DBClientManager.getInstance()
-    const result = await dbclient.selectAll<LineAddressModel>("line_address", request.filter)
+    const result = await dbclient.selectAll<LineMenuModel>("line_menu", request.filter)
     if (result) {
       return {
         success: true,

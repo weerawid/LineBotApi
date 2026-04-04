@@ -1,7 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 
-import lineAddress from './api/routes/line_address.route';
+import lineOrder from './api/routes/line_order.route';
+import lineMenu from './api/routes/line_menu.route';
 import lineEvent from './api/routes/line_event.route';
 import lineUser from './api/routes/line_user.route';
 import lineMessage from './api/routes/line_message.route';
@@ -17,7 +18,8 @@ manager.connect();
 app.use(contextMiddleWare);
 app.use(bodyParser.json());
 
-app.use("/api/line-address", lineAddress);
+app.use("/api/line-order", lineOrder);
+app.use("/api/line-menu", lineMenu);
 app.use("/api/line-event", lineEvent);
 app.use("/api/line-user", lineUser);
 app.use("/api/line-message", lineMessage);

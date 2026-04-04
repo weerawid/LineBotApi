@@ -1,5 +1,5 @@
 import express from 'express';
-import * as controler from '../controller/line_address.controller'
+import * as controler from '../controller/line_menu.controller'
 
 const router = express.Router();
 

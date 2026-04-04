@@ -148,6 +148,15 @@ export class DBClientManager {
     }
   }
 
+  async selectOne<T = any>(table: string, whereClause: Record<string, any>): Promise<T | null> {
+    const results = await this.selectAll<T>(table, whereClause);
+    if (results.length > 0) {
+      return results[0];
+    } else {
+      return null;
+    }
+  }
+
   /**
    * Insert data into table
    * @param table - Table name

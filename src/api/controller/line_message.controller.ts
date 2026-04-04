@@ -34,10 +34,10 @@ export async function update(
   res: Response
 ): Promise<void> {
   try {
-    const userId = req.params.id
+    const messageId = req.params.id
     const { text, type, action, quotedToken, quotedId } = req.body
     const result = await updateLineMessage({
-      message_id: userId,
+      message_id: messageId,
       data: {
         message_text: text,
         message_type: type,
