@@ -1,6 +1,6 @@
-import { DBClientManager } from "../core/dbclient/dbclient";
-import { ErrorInfo, ErrorMap, getErrorMessage } from "../core/error/error.app";
-import { LineOrderItemModel } from "../model/line_order_item.model";
+import { DBClientManager } from "../core/dbclient/dbclient.js";
+import { ErrorInfo, ErrorMap, getErrorMessage } from "../core/error/error.app.js";
+import { LineOrderItemModel } from "../model/line_order_item.model.js";
 
 
 export interface Parameters {

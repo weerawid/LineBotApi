@@ -1,11 +1,11 @@
 import type { Request, Response } from "express"
-import { getSysSlip, Result } from "../../usecase/get_sys_slip.usecase";
-import { AppError, ErrorKey, getErrorMessage } from "../../core/error/error.app";
-import { getContext } from "../../core/context/app_context";
-import { SlipApiModel } from "../../model/slip_api.model";
-import insertSysSlip from "../../usecase/insert_sys_slip.usecase";
-import { SysSlipModel } from "../../model/sys_slip.model";
-import updateSysSlip from "../../usecase/update_sys_slip.usecase";
+import { getSysSlip, Result } from "../../usecase/get_sys_slip.usecase.js";
+import { AppError, ErrorKey, getErrorMessage } from "../../core/error/error.app.js";
+import { getContext } from "../../core/context/app_context.js";
+import { SlipApiModel } from "../../model/slip_api.model.js";
+import insertSysSlip from "../../usecase/insert_sys_slip.usecase.js";
+import { SysSlipModel } from "../../model/sys_slip.model.js";
+import updateSysSlip from "../../usecase/update_sys_slip.usecase.js";
 
 type Params = {
   api: string;

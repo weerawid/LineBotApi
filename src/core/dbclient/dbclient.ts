@@ -1,7 +1,7 @@
 import { createClient } from "@libsql/client"
 import type { Client } from "@libsql/client"
-import { getContext } from "../context/app_context";
-import { AppError, ErrorKey } from "../error/error.app";
+import { getContext } from "../context/app_context.js";
+import { AppError, ErrorKey } from "../error/error.app.js";
 
 let dbClient: Client | null = null;
 
@@ -140,7 +140,7 @@ export class DBClientManager {
         sql += ` WHERE ${whereConditions}`;
         params = Object.values(whereClause);
       }
-      console.log(`sql: ${sql}`)
+      // console.log(`sql: ${sql}`)
       const result = await this.client!.execute(sql, params);
       return result.rows as T[];
     } catch (error) {

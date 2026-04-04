@@ -1,8 +1,8 @@
 import type { Request, Response } from "express"
-import insertLineMessage from "../../usecase/insert_line_message.usecase"
-import updateLineMessage from "../../usecase/update_line_message.usecase"
-import { getErrorMessage } from "../../core/error/error.app";
-import { getMessage } from "../../usecase/get_message.usecase";
+import insertLineMessage from "../../usecase/insert_line_message.usecase.js"
+import updateLineMessage from "../../usecase/update_line_message.usecase.js"
+import { getErrorMessage } from "../../core/error/error.app.js";
+import { getMessage } from "../../usecase/get_message.usecase.js";
 
 type Params = {
   id: string;

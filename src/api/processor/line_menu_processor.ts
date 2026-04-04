@@ -1,10 +1,10 @@
 import { v5 as uuidv5 } from 'uuid';
 
-import { LineMenuModel } from "../../model/line_menu.model";
-import { getLineMenu } from "../../usecase/get_menu.usecase";
-import UUIDNameSpace from '../../core/constraint/uuid_namespace.constraint';
-import insertLineMenu from '../../usecase/insert_line_menu.usecase';
-import updateLineMenu from '../../usecase/update_line_menu.usecase';
+import { LineMenuModel } from "../../model/line_menu.model.js";
+import { getLineMenu } from "../../usecase/get_menu.usecase.js";
+import UUIDNameSpace from '../../core/constraint/uuid_namespace.constraint.js';
+import insertLineMenu from '../../usecase/insert_line_menu.usecase.js';
+import updateLineMenu from '../../usecase/update_line_menu.usecase.js';
 
 export async function getMenu(name: string, price: number): Promise<LineMenuModel | undefined> {
   const LINE_MENU_UUID = uuidv5('line_menu', UUIDNameSpace.BASE_UUID)

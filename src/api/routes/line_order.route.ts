@@ -1,5 +1,5 @@
 import express from 'express';
-import * as controler from '../controller/line_order.controller'
+import * as controler from '../controller/line_order.controller.js'
 
 const router = express.Router();
 

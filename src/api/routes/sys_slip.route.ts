@@ -1,5 +1,5 @@
 import express from 'express';
-import * as slip from '../controller/sys_slip.controller'
+import * as slip from '../controller/sys_slip.controller.js'
 
 const router = express.Router();
 

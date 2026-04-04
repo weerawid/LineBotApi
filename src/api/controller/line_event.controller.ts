@@ -1,7 +1,7 @@
-import type { Request, Response } from "express"
-import { DBClientManager } from "../../core/dbclient/dbclient"
-import insertLineEvent from "../../usecase/insert_line_event.usecase"
-import { getErrorMessage } from "../../core/error/error.app"
+import type { Request, Response } from "express"  
+import { DBClientManager } from "../../core/dbclient/dbclient.js"
+import insertLineEvent from "../../usecase/insert_line_event.usecase.js"
+import { getErrorMessage } from "../../core/error/error.app.js"
 
 export async function inquiry(
   req: Request,

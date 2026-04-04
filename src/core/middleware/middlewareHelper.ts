@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { updateContext } from "../context/app_context";
+import { updateContext } from "../context/app_context.js";
 
 export const contextMiddleWare = async (
   req: Request,

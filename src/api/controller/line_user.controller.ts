@@ -1,7 +1,7 @@
 import type { Request, Response } from "express"
-import insertLineUser from "../../usecase/insert_line_user.usecase"
-import { getErrorMessage } from "../../core/error/error.app"
-import updateLineUser from "../../usecase/update_line_user.usecase"
+import insertLineUser from "../../usecase/insert_line_user.usecase.js"
+import { getErrorMessage } from "../../core/error/error.app.js"
+import updateLineUser from "../../usecase/update_line_user.usecase.js"
 
 export async function create(
   req: Request,

@@ -1,7 +1,6 @@
-import { DBClientManager } from "../core/dbclient/dbclient";
-import { AppError, ErrorInfo, ErrorKey, getErrorMessage } from "../core/error/error.app";
-import { LineMessageModel } from "../model/line_mesage.model";
-import { SysSlipModel } from "../model/sys_slip.model";
+import { DBClientManager } from "../core/dbclient/dbclient.js";
+import { AppError, ErrorInfo, ErrorKey, getErrorMessage } from "../core/error/error.app.js";
+import { LineMessageModel } from "../model/line_mesage.model.js";
 
 export interface Request {
   filter?: Record<string, any> | null

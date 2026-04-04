@@ -1,6 +1,6 @@
-import { DBClientManager } from "../core/dbclient/dbclient";
-import { AppError, ErrorInfo, ErrorKey, getErrorMessage } from "../core/error/error.app";
-import { LineMenuModel } from "../model/line_menu.model";
+import { DBClientManager } from "../core/dbclient/dbclient.js";
+import { AppError, ErrorInfo, ErrorKey, getErrorMessage } from "../core/error/error.app.js";
+import { LineMenuModel } from "../model/line_menu.model.js";
 
 export interface Request {
   filter?: Record<string, any> | null

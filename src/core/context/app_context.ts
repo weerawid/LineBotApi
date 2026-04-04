@@ -1,4 +1,4 @@
-import { getConfig } from '../google/google_sheet'
+import { getConfig } from '../google/google_sheet.js';
 
 /**
  * โครงสร้างของ config ที่ดึงมาจาก Google Sheet

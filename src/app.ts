@@ -1,14 +1,14 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 
-import lineOrder from './api/routes/line_order.route';
-import lineMenu from './api/routes/line_menu.route';
-import lineEvent from './api/routes/line_event.route';
-import lineUser from './api/routes/line_user.route';
-import lineMessage from './api/routes/line_message.route';
-import sysSlip from './api/routes/sys_slip.route';
-import { contextMiddleWare } from './core/middleware/middlewareHelper';
-import { DBClientManager } from './core/dbclient/dbclient';
+import lineOrder from './api/routes/line_order.route.js';
+import lineMenu from './api/routes/line_menu.route.js';
+import lineEvent from './api/routes/line_event.route.js';
+import lineUser from './api/routes/line_user.route.js';
+import lineMessage from './api/routes/line_message.route.js';
+import sysSlip from './api/routes/sys_slip.route.js';
+import { contextMiddleWare } from './core/middleware/middlewareHelper.js';
+import { DBClientManager } from './core/dbclient/dbclient.js';
 
 const app = express();
 
