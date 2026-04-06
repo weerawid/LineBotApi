@@ -8,7 +8,6 @@ export interface OrderItem{
   menu: string;
   qty: number;
   price: number;
-  total: number;
 }
 
 export async function create(
@@ -18,7 +17,7 @@ export async function create(
   try {
     const { item, user_id, message_id } = req.body
     
-    const itemList = hasParameter<OrderItem[]>(item, Array, ['menu', 'qty', 'price', 'total'])
+    const itemList = hasParameter<OrderItem[]>(item, Array, ['menu', 'qty', 'price'])
     const userIdParam = hasParameter<string>(user_id, 'string')
     const messageIdParam = hasParameter<string>(message_id, 'string')
 

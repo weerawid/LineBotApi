@@ -27,13 +27,13 @@ export async function createOrder(item: OrderItem[], userId: string, messageId: 
       uuid: orderItemUuid,
       qty: orderItem.qty,
       price: orderItem.price,
-      total: orderItem.total,
+      total: orderItem.price * orderItem.qty,
       createdAt: orderDate,
       orderUuid: orderUuid,
       menuUuid: menuUuid
     })
     if (!orderItemResult.success) return;
-    total += orderItem.total
+    total += (orderItemResult.data?.line_order_item_total ?? 0) * orderItem.qty
 
     return orderItemUuid
   })).then(async () => {
