@@ -196,7 +196,7 @@ export class DBClientManager {
       const params = columns.map((col) => {
         const value = values[col];
         if (value instanceof Date) {
-          return value.toLocaleDateString('th-TH', { timeZone: 'Asia/Bangkok' });
+          return value.toISOString()
         } else {
           return value === undefined ? null : values[col]
         }
@@ -240,7 +240,7 @@ export class DBClientManager {
       const params = columns.map((col) => {
         const value = values[col];
         if (value instanceof Date) {
-          return value.toISOString
+          return value.toISOString()
         } else {
           return value === undefined ? null : values[col]
         }
