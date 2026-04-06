@@ -8,7 +8,7 @@ import lineEvent from './api/routes/line_event.route.js';
 import lineUser from './api/routes/line_user.route.js';
 import lineMessage from './api/routes/line_message.route.js';
 import sysSlip from './api/routes/sys_slip.route.js';
-import { contextMiddleWare } from './core/middleware/middlewareHelper.js';
+import { contextMiddleWare } from './core/middleware/helper.js';
 import { DBClientManager } from './core/dbclient/dbclient.js';
 
 const app = express();
