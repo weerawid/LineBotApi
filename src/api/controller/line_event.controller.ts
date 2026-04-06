@@ -30,7 +30,7 @@ export async function create(
 
     let eventId = jsonEvent.webhookEventId
     let groupId = jsonEvent.source.groupId
-    let timestamp = new Date(jsonEvent.timestamp).toISOString()
+    let timestamp = new Date(jsonEvent.timestamp)
     
     const result = await insertLineEvent({
       event_id: eventId,

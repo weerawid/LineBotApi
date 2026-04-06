@@ -6,7 +6,7 @@ export interface Parameters {
   event_id: string,
   event: string,
   group_id: string,
-  timestamp: string,
+  timestamp: Date,
   destination: string
 }
 

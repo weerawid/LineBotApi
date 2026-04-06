@@ -30,7 +30,7 @@ export default async function insertLineOrder(params: Parameters): Promise<Resul
       const data = {
         line_order_uuid: params.uuid,
         line_order_total: params.total,
-        line_order_created_at: params.createdAt.toISOString(),
+        line_order_created_at: params.createdAt,
         line_message_id: params.messageId,
         line_user_id: params.userId
       }

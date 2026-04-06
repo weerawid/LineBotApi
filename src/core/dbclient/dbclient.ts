@@ -193,9 +193,14 @@ export class DBClientManager {
       const columnNames = columns.join(", ");
       const placeholders = columns.map(() => "?").join(", ");
       // Handle null/undefined values - convert undefined to null
-      const params = columns.map((col) =>
-        values[col] === undefined ? null : values[col]
-      );
+      const params = columns.map((col) => {
+        const value = values[col];
+        if (value instanceof Date) {
+          return value.toLocaleDateString('th-TH', { timeZone: 'Asia/Bangkok' });
+        } else {
+          return value === undefined ? null : values[col]
+        }
+      });
 
       // Build SQL query
       const sql = `INSERT INTO ${table} (${columnNames}) VALUES (${placeholders})`;
@@ -232,9 +237,14 @@ export class DBClientManager {
       }
 
       const setClause = columns.map(col => `${col} = ?`).join(", ");
-      const params = columns.map((col) =>
-        values[col] === undefined ? null : values[col]
-      );
+      const params = columns.map((col) => {
+        const value = values[col];
+        if (value instanceof Date) {
+          return value.toLocaleDateString('th-TH', { timeZone: 'Asia/Bangkok' });
+        } else {
+          return value === undefined ? null : values[col]
+        }
+      });
 
       const whereClauseConditions = Object.keys(whereClause).map(col => `${col} = ?`).join(" AND ");
       const whereParams = Object.values(whereClause);

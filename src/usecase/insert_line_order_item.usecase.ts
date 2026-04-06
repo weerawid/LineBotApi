@@ -34,7 +34,7 @@ export default async function insertLineOrderItem(params: Parameters): Promise<R
         line_order_item_qty: params.qty,
         line_order_item_price: params.price,
         line_order_item_total: params.total,
-        line_order_item_created_at: params.createdAt.toISOString(),
+        line_order_item_created_at: params.createdAt,
         line_order_uuid: params.orderUuid,
         line_menu_uuid: params.menuUuid
       }
