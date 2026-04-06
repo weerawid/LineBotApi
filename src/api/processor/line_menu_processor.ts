@@ -23,10 +23,11 @@ export async function getMenu(name: string, price: number): Promise<LineMenuMode
       if (updateMenuResult.success) {
         return updateMenuResult.data as LineMenuModel
       } else {
-        return undefined
+        return menu
       }
-    } 
-    return 
+    } else {
+      return menu
+    }
   } else {
     const uuid = uuidv5(name, LINE_MENU_UUID)
     const insertMenuResult = await insertLineMenu({
