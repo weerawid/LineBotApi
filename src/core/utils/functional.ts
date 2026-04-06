@@ -1,4 +1,3 @@
-import e from "express";
 import { AppError, ErrorKey } from "../error/error.app.js";
 
 export function hasParameter<T>(
