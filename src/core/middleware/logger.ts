@@ -1,38 +1,42 @@
 import type { Request, Response, NextFunction } from 'express';
+import { getContext } from '../context/app_context.js';
 
-export const logger = (
+export const logger = async (
   req: Request,
   res: Response,
   next: NextFunction
-): void => {
+): Promise<void> => {
+  const context = await getContext();
+  const config = context.config
   try {
-    const start = Date.now();
-    console.log(`Incoming Request: ${req.method} ${req.originalUrl}`);
-    let responseBody: any;
+    if (config['IS_KEEP_LOG_REQ_RES']?.toUpperCase() === 'TRUE') {
+      const start = Date.now();
+      let responseBody: any;
 
-    const oldSend = res.send.bind(res);
+      const oldSend = res.send.bind(res);
 
-    res.send = ((body?: any) => {
-      responseBody = body;
-      return oldSend(body);
-    }) as Response['send'];
+      res.send = ((body?: any) => {
+        responseBody = body;
+        return oldSend(body);
+      }) as Response['send'];
 
-    res.on('finish', () => {
-      const log = {
-        method: req.method,
-        url: req.originalUrl,
-        status: res.statusCode,
-        requestBody: req.body,
-        responseBody: tryParseJSON(responseBody),
-        responseTime: `${Date.now() - start}ms`,
-      };
+      res.on('finish', () => {
+        const log = {
+          method: req.method,
+          url: req.originalUrl,
+          status: res.statusCode,
+          requestBody: req.body,
+          responseBody: tryParseJSON(responseBody),
+          responseTime: `${Date.now() - start}ms`,
+        };
 
-      console.log(JSON.stringify(log));
-    });
+        console.log(JSON.stringify(log));
+      });
+    }
 
     next();
   } catch (err) {
-    next(err); // ส่งต่อไป error middleware
+    next(err);
   }
 };
 
