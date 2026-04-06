@@ -1,13 +1,13 @@
 import type { Request, Response, NextFunction } from 'express';
 
-export const helperContext = async (
+export const logger = (
   req: Request,
   res: Response,
   next: NextFunction
-): Promise<void> => {
+): void => {
   try {
     const start = Date.now();
-
+    console.log(`Incoming Request: ${req.method} ${req.originalUrl}`);
     let responseBody: any;
 
     const oldSend = res.send.bind(res);

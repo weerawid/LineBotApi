@@ -1,6 +1,5 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import morgan from 'morgan';
 
 import lineOrder from './api/routes/line_order.route.js';
 import lineMenu from './api/routes/line_menu.route.js';
@@ -8,7 +7,8 @@ import lineEvent from './api/routes/line_event.route.js';
 import lineUser from './api/routes/line_user.route.js';
 import lineMessage from './api/routes/line_message.route.js';
 import sysSlip from './api/routes/sys_slip.route.js';
-import { contextMiddleWare } from './core/middleware/helper.js';
+import { helperContext } from './core/middleware/helper.js';
+import { logger } from './core/middleware/logger.js';
 import { DBClientManager } from './core/dbclient/dbclient.js';
 
 const app = express();
@@ -16,9 +16,9 @@ const app = express();
 const manager = DBClientManager.getInstance();
 manager.connect();
 
-app.use(contextMiddleWare);
 app.use(bodyParser.json());
-app.use(morgan('combined'));
+app.use(helperContext);
+app.use(logger);
 
 app.use("/api/line-order", lineOrder);
 app.use("/api/line-menu", lineMenu);
