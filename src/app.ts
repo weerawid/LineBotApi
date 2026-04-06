@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import morgan from 'morgan';
 
 import lineOrder from './api/routes/line_order.route.js';
 import lineMenu from './api/routes/line_menu.route.js';
@@ -17,6 +18,7 @@ manager.connect();
 
 app.use(contextMiddleWare);
 app.use(bodyParser.json());
+app.use(morgan('combined'));
 
 app.use("/api/line-order", lineOrder);
 app.use("/api/line-menu", lineMenu);

@@ -17,7 +17,6 @@ export interface Result {
 }
 
 export default async function insertLineOrder(params: Parameters): Promise<Result> {
-  console.log('insertLineOrder params', params);
   try {
     const dbclient: DBClientManager = DBClientManager.getInstance()
     const count = await dbclient.getRowsCount('line_order', { line_order_uuid: params.uuid })
