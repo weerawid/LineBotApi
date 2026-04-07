@@ -27,7 +27,11 @@ export async function create(
 ): Promise<void> {
   try {
     const { event, destination } = req.body
-    const jsonEvent = event as LineWebhookEvent
+    const jsonEvent = JSON.parse(event) as LineWebhookEvent | null
+    if (!jsonEvent) {
+      res.status(400).json({ success: false, error: "Invalid event data" });
+      return;
+    }
 
     let eventId = jsonEvent.webhookEventId
     let groupId = jsonEvent.source.groupId ?? ''
