@@ -2,6 +2,7 @@ import type { Request, Response } from "express"
 import { DBClientManager } from "../../core/dbclient/dbclient.js"
 import insertLineEvent from "../../usecase/insert_line_event.usecase.js"
 import { getErrorMessage } from "../../core/error/error.app.js"
+import { LineWebhookEvent } from "../../model/event.model.js"
 
 export async function inquiry(
   req: Request,
@@ -26,10 +27,10 @@ export async function create(
 ): Promise<void> {
   try {
     const { event, destination } = req.body
-    const jsonEvent = JSON.parse(event)
+    const jsonEvent = event as LineWebhookEvent
 
     let eventId = jsonEvent.webhookEventId
-    let groupId = jsonEvent.source.groupId
+    let groupId = jsonEvent.source.groupId ?? ''
     let timestamp = new Date(jsonEvent.timestamp)
     
     const result = await insertLineEvent({
