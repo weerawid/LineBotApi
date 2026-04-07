@@ -35,7 +35,7 @@ export async function create(
     
     const result = await insertLineEvent({
       event_id: eventId,
-      event: event,
+      event: JSON.stringify(jsonEvent),
       group_id: groupId,
       timestamp: timestamp,
       destination: destination
